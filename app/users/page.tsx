@@ -96,14 +96,6 @@ const UsersPage = () => {
             }}>
             <Image src={"/admin/images/product/eye.svg"} alt="eye" width={19} height={19} className="fill-current" />
           </Buttons>
-          <Buttons
-            type="link"
-            tooltip="Xoá nhân viên"
-            onClick={() => {
-              // onDelete(entity.id)
-            }}>
-            <Image src={"/admin/images/product/delete.svg"} alt="delete" width={19} height={19} className="fill-current" />
-          </Buttons>
         </div>)
       }
     },

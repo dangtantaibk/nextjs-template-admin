@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import request from '@/utils/request';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Buttons from "@/components/Buttons";
-import moment from "moment";
 import Loading from 'components/Loading';
+import Link from "next/link";
 import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
+import { useForm } from "react-hook-form";
+import { AUTH_DOMAIN } from 'constant';
 
 const Item = ({ title, value }) => {
   return (
@@ -17,28 +19,29 @@ const Item = ({ title, value }) => {
     </div>
   )
 }
-
-interface BlogsDetailProp {
-  author: number;
-  content: string | null;
-  createdAt: number;
+interface UserDetail {
+  avatar: string | null;
   id: number;
-  publishedDate: number;
-  shortDesc: string;
-  status: number;
-  title: string;
-  updatedAt: number;
-  url?: string;
+  name: string | null;
+  password: string;
+  title: string | null;
+  username: string;
 }
 
 const UserDetailPage = () => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<any>();
+
   let id = new URLSearchParams(location.search).get('id');
   const router = useRouter();
-  const [blogDetail, setBlogDetail] = useState<BlogsDetailProp>()
+  const [userDetail, setUserDetail] = useState<UserDetail>();
   const [loading, setloading] = useState(false);
-  const [content, setContent] = useState<any>();
-  const [contentAdmin, setContentAdmin] = useState<any>({});
-  const [url, setUrl] = useState("");
+  const [urlFile, setUrlFile] = useState("");
+
   const notiDetail = {
     isOpen: false,
     message: "",
@@ -46,17 +49,17 @@ const UserDetailPage = () => {
   }
   const [notification, setNotification] = useState(notiDetail);
 
-  const getBlog = async (id) => {
+  const getUserDetail = async (id) => {
     setloading(true)
-    const resp: any = await request(`api/v1/blogs/${id}`);
+    const resp: any = await request(`api/v1/users/${id}`);
     try {
-      console.log("resp", resp)
       if (resp.data) {
-        const data = resp.data;
-        const contentAdmin = JSON.parse(data.contentAdmin);
-        setContentAdmin(contentAdmin);
-        setBlogDetail(data);
-        setUrl(data.url);
+        const user = resp.data;
+        setUserDetail(user)
+        setValue("title", user.title || '');
+        setValue("name", user.name || "");
+        setValue("username", user.username || '');
+        setUrlFile(user.avatar)
       }
     } catch (error) {
       console.log(error)
@@ -70,81 +73,166 @@ const UserDetailPage = () => {
       router.refresh();
       return;
     }
-    getBlog(id);
+    getUserDetail(id);
   }, [id]);
 
-  const handleUpdate = async () => {
-    const params = {
-      ...blogDetail, content: content,
-      url: url,
-      contentAdmin: JSON.stringify(contentAdmin)
-    }
-    const resp = await request.put(`/api/v1/blogs/${id}`, params);
+  const onSubmit = handleSubmit(async (data) => {
+    setloading(true);
+    const params = { ...userDetail, ...data, avatar: urlFile }
+    const resp = await request.put(`/api/v1/users/${id}`, params);
+
     try {
-      if (resp.status === 204) {
-        setNotification({ isOpen: true, message: "Chỉnh sửa nội dung thành công", type: "success" })
-        getBlog(id);
+      if (resp.status === 201) {
+        router.push("/users")
+        setNotification({ isOpen: true, message: "Cập nhật thông tin nhân viên thành công", type: "success" })
       } else {
-        setNotification({ isOpen: true, message: "Chỉnh sửa nội dung thất bại", type: "error" })
+        setNotification({ isOpen: true, message: "Cập nhật thông tin nhân viên thất bại", type: "error" })
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setloading(false);
+    }
+  })
+
+  const uploadAvatarUser = async (file) => {
+    const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
+    const formData = new FormData();
+    const token = await localStorage.getItem('auth');
+    if (!TYPE_IMAGE.includes(file.type)) {
+      setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
+    } else {
+      formData.append('file', file);
+      await fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          try {
+            if (data.data) {
+              setUrlFile(data.data.url)
+              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
+            } else {
+              setNotification({ isOpen: true, message: data.message, type: "error" })
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        })
+        .catch(error => {
+          console.error('Upload failed:', error);
+        });
     }
   }
 
   return (
-    <React.Fragment>
+    <form onSubmit={onSubmit}>
       {notification.isOpen &&
         <Notification type={notification.type} message={notification.message} onClose={() => {
           setNotification(notiDetail)
         }} />
       }
       <Breadcrumb parent="Thông tin nhân viên" pageName="Thông tin chi tiết" />
-      <div className="relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:border sm:shadow-lg ">
+      <div className="relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg ">
         {loading &&
           <div className="min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full"><Loading /></div>
         }
         <div className="p-5">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 rounded-sm mb-5">
-            <Item title="Mã tin tức" value={blogDetail ? blogDetail.id : '-'} />
-            <Item title="Tên tin tức" value={blogDetail ? blogDetail.title : '-'} />
-            <Item title="Thời gian tạo" value={(blogDetail && blogDetail.createdAt) ? moment(blogDetail.createdAt).format('DD/MM/YYYY') : '-'} />
-            <Item title="Link tin tức" value={<input
-              type="text"
-              defaultValue={url}
-              onChange={(e) => {
-                e.preventDefault();
-                const value = e.target.value;
-                setUrl(value);
-              }}
-              placeholder="Link tin tức"
-              className="w-full min-w-[350px] rounded-lg border border-stroke bg-transparent p-2 outline-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-            />} />
-          </div>
-          <div className="font-semibold mr-2 mb-5 border-b border-stroke">Nội dung: </div>
-          <div className="w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 rounded-sm mb-5">
+            <div className="grid grid-cols-1 gap-4">
+
+              <img src={urlFile || userDetail?.avatar || '/admin/images/user/user-06.png'} alt="file" className="w-[300px] h-[200px] object-scale-down" />
+              <Item
+                title="Cập nhập hình ảnh"
+                value={<div className="xsm:bottom-4 xsm:right-4">
+                  <label
+                    htmlFor="cover"
+                    className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
+                  >
+                    <input
+                      type="file"
+                      name="cover"
+                      id="cover"
+                      className="sr-only"
+                      accept="image/png, image/gif, image/jpeg"
+                      onChange={(e: any) => {
+                        e.preventDefault();
+                        const file = e?.target?.files[0];
+                        uploadAvatarUser(file)
+                      }} />
+                    <span>
+                      <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                    </span>
+                    <span>Upload avatar</span>
+                  </label>
+                </div>}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              <Item
+                title="Mã nhân viên"
+                value={<div>{userDetail?.id || "-"}</div>}
+              />
+
+              <Item
+                title="Tên đăng nhập"
+                value={<div className="relative">
+                  <input
+                    type="text"
+                    disabled
+                    {...register('username', {
+                      required: 'Vui lòng nhập tên đăng nhập',
+                    })}
+                    placeholder="Tên đăng nhập"
+                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary bg-bodydark"
+                  />
+                </div>}
+              />
+              <Item
+                title="Tên nhân viên"
+                value={<div className="relative">
+                  <input
+                    type="text"
+                    {...register('name', {
+                      required: 'Vui lòng nhập tên nhân viên',
+                    })}
+                    placeholder="Tên nhân viên"
+                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>}
+              />
+              <Item
+                title="Chức vụ"
+                value={<div className="relative">
+                  <input
+                    type="text"
+                    {...register('title')}
+                    placeholder="Chức vụ"
+                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>}
+              />
+            </div>
           </div>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-t border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600">
-        <Buttons
-          type="primary"
-          className="!bg-meta-8 mr-3 hover:!bg-stroke"
-          onClick={() => {
-            router.push("/blogs/list")
-          }}>
+      <footer className="fixed bottom-0 left-0 z-20 w-full p-1 bg-white shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600">
+        <Link href="/users" className="inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10">
           Huỷ
-        </Buttons>
+        </Link>
         <Buttons
           type="primary"
           className="!bg-success hover:!bg-stroke"
-          onClick={() => {
-            handleUpdate()
-          }}>
+          isSubmit={true}
+        >
           Cập nhật
         </Buttons>
       </footer>
-    </React.Fragment>
+    </form>
   );
 };
 
