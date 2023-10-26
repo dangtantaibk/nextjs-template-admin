@@ -144,8 +144,7 @@ const UserDetailPage = () => {
         <div className="p-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 rounded-sm mb-5">
             <div className="grid grid-cols-1 gap-4">
-
-              <img src={urlFile || userDetail?.avatar || '/admin/images/user/user-06.png'} alt="file" className="w-[300px] h-[200px] object-scale-down" />
+              <img src={urlFile || userDetail?.avatar || '/admin/images/user/user-06.png'} alt="file" className="w-[200px] h-[200px] object-scale-down rounded-full border" />
               <Item
                 title="Cập nhập hình ảnh"
                 value={<div className="xsm:bottom-4 xsm:right-4">
