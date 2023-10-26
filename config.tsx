@@ -31,6 +31,13 @@ export const config = {
           children: []
         },
         {
+          icon: '/admin/images/sidebar/ic-category-blogs.svg',
+          key: 'category-blogs',
+          title: 'Danh mục Blogs',
+          path: '/category-blogs',
+          children: []
+        },
+        {
           icon: '/admin/images/sidebar/profile.svg',
           key: 'profile',
           title: 'Profile',
