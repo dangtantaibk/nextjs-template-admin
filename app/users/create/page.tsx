@@ -1,15 +1,16 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import request from '@/utils/request';
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Buttons from "@/components/Buttons";
 import Loading from 'components/Loading';
 import Notification from "@/components/Notification";
 import Link from "next/link";
-
 import Image from "next/image";
+
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
+import { AUTH_DOMAIN } from 'constant';
 
 const Item = ({ title, value }) => {
   return (
@@ -30,6 +31,7 @@ const CreateUserPage = () => {
 
   const [locked, setLocked] = useState(false);
   const [loading, setloading] = useState(false);
+  const [urlFile, setUrlFile] = useState("");
 
   const notiDetail = {
     isOpen: false,
@@ -38,27 +40,10 @@ const CreateUserPage = () => {
   }
   const [notification, setNotification] = useState(notiDetail);
 
-  // const handleUpdate = async () => {
-  //   const params = {
-  //     ...blogDetail, content: content,
-  //     url: url,
-  //     contentAdmin: JSON.stringify(contentAdmin)
-  //   }
-  //   const resp = await request.put(`/api/v1/blogs/${id}`, params);
-  //   try {
-  //     if (resp.status === 204) {
-  //       setNotification({ isOpen: true, message: "Chỉnh sửa nội dung thành công", type: "success" })
-  //     } else {
-  //       setNotification({ isOpen: true, message: "Chỉnh sửa nội dung thất bại", type: "error" })
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);
-    const resp = await request.post(`/api/v1/users`, data);
+    const params = { ...data, avatar: urlFile }
+    const resp = await request.post(`/api/v1/users`, params);
 
     try {
       if (resp.status === 201) {
@@ -75,8 +60,37 @@ const CreateUserPage = () => {
   })
 
   const uploadAvatarUser = async (file) => {
-    // api/v1/upload
-    // const resp = await request.post(`/api/v1/upload`, params);
+    const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
+    const formData = new FormData();
+    const token = await localStorage.getItem('auth');
+    if (!TYPE_IMAGE.includes(file.type)) {
+      setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
+    } else {
+      formData.append('file', file);
+      await fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          try {
+            if (data.data) {
+              setUrlFile(data.data.url)
+              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
+            } else {
+              setNotification({ isOpen: true, message: data.message, type: "error" })
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        })
+        .catch(error => {
+          console.error('Upload failed:', error);
+        });
+    }
   }
 
   return (
@@ -160,11 +174,17 @@ const CreateUserPage = () => {
                   htmlFor="cover"
                   className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
                 >
-                  <input type="file" name="cover" id="cover" className="sr-only" onChange={(e: any) => {
-                    e.preventDefault();
-                    const file = e?.target?.files[0];
-                    uploadAvatarUser(file)
-                  }} />
+                  <input
+                    type="file"
+                    name="cover"
+                    id="cover"
+                    className="sr-only"
+                    accept="image/png, image/gif, image/jpeg"
+                    onChange={(e: any) => {
+                      e.preventDefault();
+                      const file = e?.target?.files[0];
+                      uploadAvatarUser(file)
+                    }} />
                   <span>
                     <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
                   </span>
@@ -172,6 +192,7 @@ const CreateUserPage = () => {
                 </label>
               </div>}
             />
+            {!!urlFile && <img src={urlFile} alt="file" className="w-[300px] h-[200px]" />}
           </div>
         </div>
       </div>

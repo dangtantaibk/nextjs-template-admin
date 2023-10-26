@@ -27,8 +27,6 @@ const DropdownUser = () => {
     setUserDetail(resp?.data?.content[0])
   }
 
-  console.log("userDetail", userDetail)
-
   useEffect(() => {
     getUserDetail();
   }, [])
