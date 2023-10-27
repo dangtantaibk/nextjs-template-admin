@@ -36,7 +36,7 @@ const chatData: Chat[] = [
     dot: 6,
   },
   {
-    avatar: "/admin//images/user/user-01.png",
+    avatar: "/admin/images/user/user-01.png",
     name: "Jhon Doe",
     text: "How are you?",
     time: 32,
