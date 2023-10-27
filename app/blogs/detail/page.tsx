@@ -11,6 +11,7 @@ import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
 import { AUTH_DOMAIN } from 'constant';
+// import EditorConfig from "@/components/EditorConfig";
 
 const Item = ({ title, value }) => {
   return (
@@ -196,6 +197,7 @@ const BlogsDetailPage = () => {
           />
           <div className="font-semibold mr-2 mb-5 border-b border-stroke">Nội dung: </div>
           <div className="w-full">
+            {/* <EditorConfig /> */}
             {contentAdmin ?
               <EditorNovelDefault contentAdmin={contentAdmin} handleUpdateEditor={handleUpdateEditor} />
               : <EditorNovel handleUpdateEditor={handleUpdateEditor} />

@@ -18,7 +18,7 @@ const EditorNovelDefault = (props: EditorNovelProps) => {
   return (
     <Editor
       defaultValue={contentAdmin}
-      editorProps={{...defaultEditorProps}}
+      // editorProps={{...defaultEditorProps}}
       disableLocalStorage={true}
       className="border-stroke min-h[300px] max-h[500px]"
       onDebouncedUpdate={(editor) => {
