@@ -40,7 +40,18 @@ const ProductsPage = () => {
 
   useEffect(() => {
     getListProducts();
-  }, [])
+  }, []);
+
+  const onDelete = async (id) => {
+    const resp = await request.delete(`/api/v1/products/${id}`);
+    try {
+      if (resp.status === 204) {
+        getListProducts();
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const columns = [
     {
@@ -116,7 +127,7 @@ const ProductsPage = () => {
             type="link"
             tooltip="Xoá blog"
             onClick={() => {
-              // onDelete(entity.id)
+              onDelete(entity.id)
             }}>
             <Image src={"/admin/images/product/delete.svg"} alt="delete" width={19} height={19} className="fill-current" />
           </Buttons>
