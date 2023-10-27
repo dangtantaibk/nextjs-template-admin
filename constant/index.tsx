@@ -1,7 +1,4 @@
-export const AUTH_DOMAIN = {
-  'banhtrungthu24h.com': 'banhtrungthu24h.com/',
-  'localhost:3001': 'banhtrungthu24h.com/'
-};
+export const AUTH_DOMAIN = 'https://banhtrungthu24h.com/'
 
 export const ECODE = {
   SUCCESS: 0,

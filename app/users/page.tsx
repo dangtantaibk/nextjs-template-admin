@@ -114,7 +114,7 @@ const UsersPage = () => {
           pagination={pagination}
           setPagination={setPagination}
           toolBarRender={[
-            <Buttons type="link" tooltip="Thêm nhân viên" onClick={() => {
+            <Buttons type="link" tooltip="Thêm nhân viên" key={1} onClick={() => {
               router.push(`/users/create`);
             }}>
               <Image src={"/admin/images/product/plus.svg"} alt="eye" width={19} height={19} className="fill-current" />

@@ -32,11 +32,7 @@ const SignUp: React.FC = () => {
   const [rePass, setRePass] = useState(false);
 
   const registerUser = async (data) => {
-    const resp = await request('api/v1/users/login', {
-      method: 'POST',
-      data: data,
-      requestType: 'json',
-    });
+    const resp = await request.post(`api/v1/users/login`, data);
     if (resp) { }
   }
 

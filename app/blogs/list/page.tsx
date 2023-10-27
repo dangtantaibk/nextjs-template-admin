@@ -92,7 +92,7 @@ const BlogsPage = () => {
       dataIndex: 'url',
       width: 170,
       render: (dom, entity) => {
-        const url = `https://${AUTH_DOMAIN[location.host]}blog/${dom}`
+        const url = `${AUTH_DOMAIN}blog/${dom}`
         return <Link href={url} className="text-primary hover:cursor-pointer transition hover:bg-opacity-90">
           {dom}
         </Link>
@@ -130,7 +130,7 @@ const BlogsPage = () => {
             type="link"
             tooltip="Xem chi tiết blog"
             onClick={() => {
-              router.push(`/blogs/detail?id=${entity.id}`);
+              router.push(`/blogs/detail/${entity.id}`);
             }}>
             <Image src={"/admin/images/product/eye.svg"} alt="eye" width={19} height={19} className="fill-current" />
           </Buttons>
@@ -164,6 +164,7 @@ const BlogsPage = () => {
             <Buttons
               type="link"
               tooltip="Thêm blog"
+              key={13}
               onClick={() => {
                 router.push(`/blogs/create`);
               }}>

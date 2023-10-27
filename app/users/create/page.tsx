@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { AUTH_DOMAIN } from 'constant';
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -39,6 +40,7 @@ const CreateUserPage = () => {
     type: ""
   }
   const [notification, setNotification] = useState(notiDetail);
+  const [token, setToken] = useLocalStorage("auth", "");
 
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);
@@ -62,12 +64,11 @@ const CreateUserPage = () => {
   const uploadAvatarUser = async (file) => {
     const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
     const formData = new FormData();
-    const token = await localStorage.getItem('auth');
     if (!TYPE_IMAGE.includes(file.type)) {
       setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
     } else {
       formData.append('file', file);
-      await fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+      await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
         method: 'POST',
         body: formData,
         headers: {

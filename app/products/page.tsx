@@ -119,7 +119,7 @@ const ProductsPage = () => {
             type="link"
             tooltip="Xem chi tiết sản phẩm"
             onClick={() => {
-              router.push(`/products/detail?id=${entity.id}`);
+              router.push(`/products/detail/${entity.id}`);
             }}>
             <Image src={"/admin/images/product/eye.svg"} alt="eye" width={19} height={19} className="fill-current" />
           </Buttons>
@@ -149,7 +149,7 @@ const ProductsPage = () => {
           pagination={pagination}
           setPagination={setPagination}
           toolBarRender={[
-            <Buttons type="link" tooltip="Thêm sản phẩm" onClick={() => {
+            <Buttons type="link" tooltip="Thêm sản phẩm" key={1} onClick={() => {
               router.push(`/products/create`);
             }}>
               <Image src={"/admin/images/product/plus.svg"} alt="eye" width={19} height={19} className="fill-current" />

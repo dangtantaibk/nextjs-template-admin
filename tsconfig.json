@@ -39,6 +39,7 @@
     "config",
     "app",
     "models",
+    "hooks",
     "public/images/sidebar",
     ".next/types/**/*.ts"
   ],

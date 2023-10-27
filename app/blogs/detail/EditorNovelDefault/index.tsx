@@ -1,7 +1,6 @@
 "use client"
 import React, { memo } from "react";
 import { Editor } from "novel";
-import { defaultEditorProps } from '../props';
 
 interface EditorNovelProps {
   contentAdmin: any;
@@ -18,7 +17,6 @@ const EditorNovelDefault = (props: EditorNovelProps) => {
   return (
     <Editor
       defaultValue={contentAdmin}
-      // editorProps={{...defaultEditorProps}}
       disableLocalStorage={true}
       className="border-stroke min-h[300px] max-h[500px]"
       onDebouncedUpdate={(editor) => {

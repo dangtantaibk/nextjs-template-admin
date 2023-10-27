@@ -76,7 +76,7 @@ const CategoryBlogsPage = () => {
             type="link"
             tooltip="Xem chi tiết danh mục"
             onClick={() => {
-              router.push(`/category-blogs/detail?id=${entity.id}`);
+              router.push(`/category-blogs/detail/${entity.id}`);
             }}>
             <Image src={"/admin/images/product/eye.svg"} alt="eye" width={19} height={19} className="fill-current" />
           </Buttons>
@@ -106,7 +106,7 @@ const CategoryBlogsPage = () => {
           pagination={pagination}
           setPagination={setPagination}
           toolBarRender={[
-            <Buttons type="link" tooltip="Thêm danh mục" onClick={() => {
+            <Buttons type="link" tooltip="Thêm danh mục" key={12} onClick={() => {
               router.push(`/category-blogs/create`);
             }}>
               <Image src={"/admin/images/product/plus.svg"} alt="eye" width={19} height={19} className="fill-current" />
