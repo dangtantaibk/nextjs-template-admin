@@ -24,17 +24,16 @@ interface CategoryDetail {
   name: string;
 }
 
-const CategoryBlogsDetailPage = () => {
+const CategoryBlogsDetailPage = ({ params }: { params: { id: string } }) => {
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<any>();
-
-  let id = new URLSearchParams(location.search).get('id');
-
+  
   const router = useRouter();
+  const id = params.id;
   const [loading, setloading] = useState(false);
   const [categoryDetail, setCategoryDetail] = useState<CategoryDetail>();
 
@@ -71,7 +70,7 @@ const CategoryBlogsDetailPage = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);
-    const params = {...categoryDetail, ...data}
+    const params = { ...categoryDetail, ...data }
     const resp = await request.put(`/api/v1/categoryBlogs/${id}`, params);
 
     try {

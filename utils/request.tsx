@@ -36,7 +36,7 @@ import axios from 'axios';
 import { AUTH_DOMAIN, ECODE } from 'constant';
 
 const request = axios.create({
-  baseURL: `https://${AUTH_DOMAIN[location.host]}`,
+  baseURL: AUTH_DOMAIN,
   timeout: 10000,
   withCredentials: true,
 });
@@ -55,7 +55,7 @@ const addAuthorizationHeader = (config) => {
 
 const handleErrorResponse = (error) => {
   if (error.response?.data?.code === ECODE.SESSION_INVALID) {
-    window.location.href = `https://${AUTH_DOMAIN[location.host]}/login/?refType=DMS_ADMIN&redirect_url=${encodeURI(location.href)}`;
+    window.location.href = `${AUTH_DOMAIN}/login/?refType=DMS_ADMIN&redirect_url=${encodeURI(location.href)}`;
   } else if (error.response?.data?.code === ECODE.PERMISSION_DENIED) {
     if (window.location.href !== '/403') {
       window.location.href = `/403?redirect_url=${encodeURI(location.href)}`;

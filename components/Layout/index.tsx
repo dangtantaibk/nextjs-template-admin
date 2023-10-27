@@ -59,7 +59,7 @@ const Layout = (props: LayoutProps) => {
     return <AuthComponent
       sidebarOpen={sidebarOpen}
       setSidebarOpen={setSidebarOpen}
-      children={children} />
+    >{children}</AuthComponent>
   }
 
   return (

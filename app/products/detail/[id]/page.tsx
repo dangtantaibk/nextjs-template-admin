@@ -11,6 +11,7 @@ import Notification from "@/components/Notification";
 import { AUTH_DOMAIN } from 'constant';
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -35,12 +36,13 @@ interface ProductsDetailProp {
   viewCount: number;
 }
 
-const ProductDetailPage = () => {
-  let id = new URLSearchParams(location.search).get('id');
+const ProductDetailPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
+  const id = params.id;
   const [productDetail, setProductDetail] = useState<ProductsDetailProp>()
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
+  const [token, setToken] = useLocalStorage("auth", "");
   const {
     register,
     handleSubmit,
@@ -103,12 +105,11 @@ const ProductDetailPage = () => {
   const uploadAvatarUser = async (file) => {
     const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
     const formData = new FormData();
-    const token = await localStorage.getItem('auth');
     if (!TYPE_IMAGE.includes(file.type)) {
       setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
     } else {
       formData.append('file', file);
-      await fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+      await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
         method: 'POST',
         body: formData,
         headers: {
