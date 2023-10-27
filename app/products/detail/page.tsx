@@ -149,7 +149,7 @@ const ProductDetailPage = () => {
         <div className="p-5 flex flex-col sm:flex-row">
           <div className="md:max-w-[280px] sm:max-w-full">
             <div className="bg-gray-800 mb-3 text-lg font-semibold">Hình ảnh sản phẩm:</div>
-            <img src={urlFile || productDetail?.image} alt="image" className="w-[260px] h-[360px]" />
+            <img src={urlFile || productDetail?.image} alt="image" className="w-[260px] h-[360px] object-contain " />
             <Item
               title="Cập nhập hình ảnh"
               value={<div className="xsm:bottom-4 xsm:right-4">

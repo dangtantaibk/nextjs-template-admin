@@ -117,7 +117,7 @@ const ProductsPage = () => {
         return (<div className="flex items-center space-x-3.5">
           <Buttons
             type="link"
-            tooltip="Xem chi tiết blog"
+            tooltip="Xem chi tiết sản phẩm"
             onClick={() => {
               router.push(`/products/detail?id=${entity.id}`);
             }}>
@@ -125,7 +125,7 @@ const ProductsPage = () => {
           </Buttons>
           <Buttons
             type="link"
-            tooltip="Xoá blog"
+            tooltip="Xoá sản phẩm"
             onClick={() => {
               onDelete(entity.id)
             }}>
