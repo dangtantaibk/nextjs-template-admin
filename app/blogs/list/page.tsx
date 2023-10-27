@@ -74,6 +74,19 @@ const BlogsPage = () => {
       width: 170,
     },
     {
+      title: 'Hình nền blog',
+      key: 'backgroundUrl',
+      dataIndex: 'backgroundUrl',
+      width: 200,
+      render: (dom, entity) => {
+        if (dom) {
+          return <img src={entity?.backgroundUrl || ""} alt="backgroundUrl" className="w-[180px] h-[150px] object-contain "/>
+        } else {
+          return 'Không có hình nền'
+        }
+      }
+    },
+    {
       title: 'Link tin tức',
       key: 'url',
       dataIndex: 'url',

@@ -10,6 +10,7 @@ import Loading from 'components/Loading';
 import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
+import { AUTH_DOMAIN } from 'constant';
 
 const Item = ({ title, value }) => {
   return (
@@ -31,6 +32,7 @@ interface BlogsDetailProp {
   title: string;
   updatedAt: number;
   url?: string;
+  backgroundUrl?: string | null;
 }
 
 const BlogsDetailPage = () => {
@@ -41,6 +43,7 @@ const BlogsDetailPage = () => {
   const [content, setContent] = useState<any>();
   const [contentAdmin, setContentAdmin] = useState<any>({});
   const [url, setUrl] = useState("");
+  const [urlFile, setUrlFile] = useState("");
   const notiDetail = {
     isOpen: false,
     message: "",
@@ -52,13 +55,13 @@ const BlogsDetailPage = () => {
     setloading(true)
     const resp: any = await request(`api/v1/blogs/${id}`);
     try {
-      console.log("resp", resp)
       if (resp.data) {
         const data = resp.data;
         const contentAdmin = JSON.parse(data.contentAdmin);
         setContentAdmin(contentAdmin);
         setBlogDetail(data);
         setUrl(data.url);
+        setUrlFile(data.backgroundUrl)
       }
     } catch (error) {
       console.log(error)
@@ -79,7 +82,8 @@ const BlogsDetailPage = () => {
     const params = {
       ...blogDetail, content: content,
       url: url,
-      contentAdmin: JSON.stringify(contentAdmin)
+      contentAdmin: JSON.stringify(contentAdmin),
+      backgroundUrl: urlFile
     }
     const resp = await request.put(`/api/v1/blogs/${id}`, params);
     try {
@@ -97,6 +101,40 @@ const BlogsDetailPage = () => {
   const handleUpdateEditor = (content, view) => {
     setContentAdmin(view);
     setContent(content)
+  }
+
+  const uploadBackground = async (file) => {
+    const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
+    const formData = new FormData();
+    const token = await localStorage.getItem('auth');
+    if (!TYPE_IMAGE.includes(file.type)) {
+      setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
+    } else {
+      formData.append('file', file);
+      await fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          try {
+            if (data.data) {
+              setUrlFile(data.data.url)
+              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
+            } else {
+              setNotification({ isOpen: true, message: data.message, type: "error" })
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        })
+        .catch(error => {
+          console.error('Upload failed:', error);
+        });
+    }
   }
 
   return (
@@ -128,6 +166,34 @@ const BlogsDetailPage = () => {
               className="w-full min-w-[350px] rounded-lg border border-stroke bg-transparent p-2 outline-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             />} />
           </div>
+          {(urlFile || blogDetail?.backgroundUrl) &&
+            <img src={urlFile || blogDetail?.backgroundUrl || ""} alt="image" className="w-[350px] h-[200px] object-contain " />
+          }
+          <Item
+            title="Cập nhập hình nền"
+            value={<div className="xsm:bottom-4 xsm:right-4">
+              <label
+                htmlFor="cover"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
+              >
+                <input
+                  type="file"
+                  name="cover"
+                  id="cover"
+                  className="sr-only"
+                  accept="image/png, image/gif, image/jpeg"
+                  onChange={(e: any) => {
+                    e.preventDefault();
+                    const file = e?.target?.files[0];
+                    uploadBackground(file);
+                  }} />
+                <span>
+                  <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                </span>
+                <span>Upload</span>
+              </label>
+            </div>}
+          />
           <div className="font-semibold mr-2 mb-5 border-b border-stroke">Nội dung: </div>
           <div className="w-full">
             {contentAdmin ?
