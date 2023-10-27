@@ -101,26 +101,20 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
   });
 }
 
-// `https://${AUTH_DOMAIN[location.host]}api/v1/upload`
-// 'https://novel.sh/api/upload'
-export const handleImageUpload = (file: File) => {
-  // upload to Vercel Blob
+export const handleImageUpload = async (file) => {
   return new Promise((resolve) => {
+    const formData = new FormData();
     const token = localStorage.getItem('auth');
-    const myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
-      var formdata = new FormData();
-      formdata.append("file", file, file.name);
-
-      const requestOptions: RequestInit = {
-        method: 'POST',
-        headers: myHeaders,
-        body: formdata,
-        redirect: 'follow'
-      };
-
-    // toast.promise(
-      fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, requestOptions).then(async (res) => {
+    formData.append('file', file);
+    fetch(`https://${AUTH_DOMAIN[location.host]}api/v1/upload`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(async res => {
+        console.log("res=====", res)
         if (res.status === 200) {
           const { url } = (await res.json()) as BlobResult;
           // preload the image
@@ -132,6 +126,7 @@ export const handleImageUpload = (file: File) => {
           // No blob store configured
         } else if (res.status === 401) {
           resolve(file);
+
           throw new Error(
             "`BLOB_READ_WRITE_TOKEN` environment variable not found, reading image locally instead."
           );
@@ -140,11 +135,11 @@ export const handleImageUpload = (file: File) => {
           throw new Error(`Error uploading image. Please try again.`);
         }
       }),
-      {
-        loading: "Uploading image...",
-        success: "Image uploaded successfully.",
-        error: (e) => e.message,
-      }
-    // );
-  });
-};
+    {
+      loading: "Uploading image...",
+      success: "Image uploaded successfully.",
+      error: (e) => e.message,
+    }
+  })
+}
+
