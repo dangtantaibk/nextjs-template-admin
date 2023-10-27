@@ -138,7 +138,9 @@ const ProductsPage = () => {
           pagination={pagination}
           setPagination={setPagination}
           toolBarRender={[
-            <Buttons type="link" tooltip="Thêm sản phẩm">
+            <Buttons type="link" tooltip="Thêm sản phẩm" onClick={() => {
+              router.push(`/products/create`);
+            }}>
               <Image src={"/admin/images/product/plus.svg"} alt="eye" width={19} height={19} className="fill-current" />
             </Buttons>
           ]}
