@@ -7,6 +7,7 @@ import EditorNovelDefault from "../EditorNovelDefault";
 import EditorNovel from '../EditorNovel';
 import moment from "moment";
 import Loading from 'components/Loading';
+import Image from "next/image";
 import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
@@ -193,7 +194,7 @@ const BlogsDetailPage = ({ params }: { params: { id: string } }) => {
                     uploadBackground(file);
                   }} />
                 <span>
-                  <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                  <Image src="/admin/images/user/ic-camera.svg" alt="ic_camera" width={19} height={19} className="fill-current" />
                 </span>
                 <span>Upload</span>
               </label>
@@ -201,7 +202,6 @@ const BlogsDetailPage = ({ params }: { params: { id: string } }) => {
           />
           <div className="font-semibold mr-2 mb-5 border-b border-stroke">Nội dung: </div>
           <div className="w-full">
-            {/* <EditorConfig /> */}
             {contentAdmin ?
               <EditorNovelDefault contentAdmin={contentAdmin} handleUpdateEditor={handleUpdateEditor} />
               : <EditorNovel handleUpdateEditor={handleUpdateEditor} />

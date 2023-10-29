@@ -29,7 +29,7 @@ const Profile = () => {
             >
               <input type="file" name="cover" id="cover" className="sr-only" />
               <span>
-                <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+              <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
               </span>
               <span>Edit</span>
             </label>
@@ -48,7 +48,12 @@ const Profile = () => {
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
               >
-                <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                <Image
+                  src="/admin/images/user/ic-camera.svg"
+                  alt="ic_camera"
+                  width={19}
+                  height={19}
+                  className="fill-current" />
                 <input
                   type="file"
                   name="profile"

@@ -7,6 +7,7 @@ import Loading from 'components/Loading';
 import Link from "next/link";
 import Notification from "@/components/Notification";
 import moment from "moment";
+import Image from "next/image";
 
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
@@ -110,7 +111,12 @@ const CreateProductPage = () => {
         <div className="p-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 rounded-sm mb-5">
             <div className="grid grid-cols-1 gap-4">
-              <img src={urlFile || '/admin/images/product/product-01.png'} alt="file" className="w-[350px] h-[250px] object-scale-down" />
+              <Image
+                src={urlFile || '/admin/images/product/product-01.png'}
+                alt="file"
+                width={350}
+                height={250}
+                className="object-scale-down" />
               <Item
                 title="Cập nhập hình ảnh"
                 value={<div className="xsm:bottom-4 xsm:right-4">
@@ -130,7 +136,12 @@ const CreateProductPage = () => {
                         uploadAvatarUser(file)
                       }} />
                     <span>
-                      <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                      <Image
+                        src="/admin/images/user/ic-camera.svg"
+                        alt="ic_camera"
+                        width={19}
+                        height={19}
+                        className="fill-current" />
                     </span>
                     <span>Upload image product</span>
                   </label>

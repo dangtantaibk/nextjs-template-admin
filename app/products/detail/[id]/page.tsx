@@ -7,6 +7,7 @@ import moment from "moment";
 import Loading from 'components/Loading';
 import Link from "next/link";
 import Notification from "@/components/Notification";
+import Image from "next/image";
 
 import { AUTH_DOMAIN } from 'constant';
 import { useForm } from "react-hook-form";
@@ -174,7 +175,12 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
                       uploadAvatarUser(file)
                     }} />
                   <span>
-                    <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                    <Image
+                      src="/admin/images/user/ic-camera.svg"
+                      alt="ic_camera"
+                      width={19}
+                      height={19}
+                      className="fill-current" />
                   </span>
                   <span>Upload</span>
                 </label>

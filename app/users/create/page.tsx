@@ -191,13 +191,18 @@ const CreateUserPage = () => {
                       uploadAvatarUser(file)
                     }} />
                   <span>
-                    <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                    <Image
+                      src="/admin/images/user/ic-camera.svg"
+                      alt="ic_camera"
+                      width={19}
+                      height={19}
+                      className="fill-current" />
                   </span>
                   <span>Avatar</span>
                 </label>
               </div>}
             />
-            {!!urlFile && <img src={urlFile} alt="file" className="w-[300px] h-[200px]" />}
+             {!!urlFile && <img src={urlFile} alt="file" className="w-[300px] h-[200px]" />}
           </div>
         </div>
       </div>

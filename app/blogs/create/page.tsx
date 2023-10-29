@@ -147,11 +147,7 @@ const BlogsDetailPage = () => {
               />
             </div>} />
             {(urlFile) &&
-              <Image
-                src={urlFile || ""}
-                alt="image"
-                className="w-[350px] h-[200px] object-contain"
-              />
+              <img src={urlFile || ""} alt="image" className="w-[350px] h-[200px] object-contain " />
             }
             <Item
               title="Cập nhập hình nền"
@@ -172,7 +168,7 @@ const BlogsDetailPage = () => {
                       uploadAvatarUser(file)
                     }} />
                   <span>
-                    <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                    <Image src="/admin/images/user/ic-camera.svg" alt="ic_camera" width={19} height={19} className="fill-current" />
                   </span>
                   <span>Upload</span>
                 </label>

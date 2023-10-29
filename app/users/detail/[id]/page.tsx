@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Buttons from "@/components/Buttons";
 import Loading from 'components/Loading';
 import Link from "next/link";
+import Image from "next/image";
 import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
@@ -169,7 +170,12 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
                         uploadAvatarUser(file)
                       }} />
                     <span>
-                      <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
+                      <Image
+                        src="/admin/images/user/ic-camera.svg"
+                        alt="ic_camera"
+                        width={19}
+                        height={19}
+                        className="fill-current" />
                     </span>
                     <span>Upload avatar</span>
                   </label>
