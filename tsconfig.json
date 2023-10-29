@@ -39,6 +39,7 @@
     "config",
     "app",
     "models",
+    "libraryTailwin",
     "hooks",
     "public/images/sidebar",
     ".next/types/**/*.ts"

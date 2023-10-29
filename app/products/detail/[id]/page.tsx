@@ -11,7 +11,6 @@ import Notification from "@/components/Notification";
 import { AUTH_DOMAIN } from 'constant';
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -42,7 +41,6 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
   const [productDetail, setProductDetail] = useState<ProductsDetailProp>()
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
-  const [token, setToken] = useLocalStorage("auth", "");
   const {
     register,
     handleSubmit,
@@ -56,6 +54,12 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
     type: ""
   }
   const [notification, setNotification] = useState(notiDetail);
+
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
 
   const getProducts = async (id) => {
     setloading(true)

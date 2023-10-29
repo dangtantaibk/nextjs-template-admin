@@ -11,7 +11,6 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { AUTH_DOMAIN } from 'constant';
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -40,7 +39,12 @@ const CreateUserPage = () => {
     type: ""
   }
   const [notification, setNotification] = useState(notiDetail);
-  const [token, setToken] = useLocalStorage("auth", "");
+
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);

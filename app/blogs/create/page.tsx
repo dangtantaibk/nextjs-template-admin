@@ -8,7 +8,6 @@ import moment from "moment";
 import Loading from 'components/Loading';
 import Link from "next/link";
 import Notification from "@/components/Notification";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 import { AUTH_DOMAIN } from 'constant';
 import { useForm } from "react-hook-form";
@@ -30,7 +29,6 @@ const BlogsDetailPage = () => {
     formState: { errors },
   } = useForm<any>();
   const router = useRouter();
-  const [token, setToken] = useLocalStorage("auth", "");
   const [loading, setloading] = useState(false);
   const [content, setContent] = useState<any>();
   const [contentAdmin, setContentAdmin] = useState<any>({});
@@ -40,6 +38,13 @@ const BlogsDetailPage = () => {
     message: "",
     type: ""
   }
+
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
+
   const [notification, setNotification] = useState(notiDetail);
 
   const handleUpdateEditor = (content, view) => {

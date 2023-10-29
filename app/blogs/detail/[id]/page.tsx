@@ -11,8 +11,6 @@ import Notification from "@/components/Notification";
 
 import { useRouter } from 'next/navigation';
 import { AUTH_DOMAIN } from 'constant';
-import useLocalStorage from "@/hooks/useLocalStorage";
-// import EditorConfig from "@/components/EditorConfig";
 
 const Item = ({ title, value }) => {
   return (
@@ -46,13 +44,18 @@ const BlogsDetailPage = ({ params }: { params: { id: string } }) => {
   const [contentAdmin, setContentAdmin] = useState<any>({});
   const [url, setUrl] = useState("");
   const [urlFile, setUrlFile] = useState("");
-  const [token, setToken] = useLocalStorage("auth", "");
   const notiDetail = {
     isOpen: false,
     message: "",
     type: ""
   }
   const [notification, setNotification] = useState(notiDetail);
+
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
 
   const getBlog = async (id) => {
     setloading(true)

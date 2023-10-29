@@ -34,7 +34,8 @@ const AuthComponent = (props: AuthComponentProps) => {
           setSidebarOpen={setSidebarOpen}
         />
         <main>
-          <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          {/* max-w-screen-2xl */}
+          <div className="mx-auto p-4 md:p-6 2xl:p-10">
             {children}
           </div>
         </main>
@@ -59,7 +60,7 @@ const Layout = (props: LayoutProps) => {
     return <AuthComponent
       sidebarOpen={sidebarOpen}
       setSidebarOpen={setSidebarOpen}
-    >{children}</AuthComponent>
+      children={children} ></AuthComponent>
   }
 
   return (

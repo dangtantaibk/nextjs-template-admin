@@ -4,7 +4,6 @@ import "./data-tables-css.css";
 import "./satoshi.css";
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 import { useRouter } from 'next/navigation';
 
@@ -16,9 +15,11 @@ const RootLayout = (props: RootLayout) => {
   const { children } = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
-  const [token, setToken] = useLocalStorage("auth", "");
 
-  let isAuth = !!token
+  let isAuth = false;
+  if (typeof window !== "undefined") {
+    isAuth = !!window.localStorage.getItem("auth");
+  }
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);

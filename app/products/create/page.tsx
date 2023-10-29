@@ -6,12 +6,11 @@ import Buttons from "@/components/Buttons";
 import Loading from 'components/Loading';
 import Link from "next/link";
 import Notification from "@/components/Notification";
+import moment from "moment";
 
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { AUTH_DOMAIN } from 'constant';
-import moment from "moment";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -39,7 +38,11 @@ const CreateProductPage = () => {
     type: ""
   }
   const [notification, setNotification] = useState(notiDetail);
-  const [token, setToken] = useLocalStorage("auth", "");
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
 
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);

@@ -10,7 +10,6 @@ import Notification from "@/components/Notification";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { AUTH_DOMAIN } from 'constant';
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Item = ({ title, value }) => {
   return (
@@ -42,7 +41,12 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
   const [userDetail, setUserDetail] = useState<UserDetail>();
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
-  const [token, setToken] = useLocalStorage("auth", "");
+
+  let token: any;
+
+  if (typeof window !== "undefined") {
+    token = window.localStorage.getItem("auth");
+  }
 
   const notiDetail = {
     isOpen: false,
