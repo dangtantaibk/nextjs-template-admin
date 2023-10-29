@@ -7,6 +7,7 @@ import EditorNovel from '../detail/EditorNovel';
 import moment from "moment";
 import Loading from 'components/Loading';
 import Link from "next/link";
+import Image from "next/image";
 import Notification from "@/components/Notification";
 
 import { AUTH_DOMAIN } from 'constant';
@@ -146,7 +147,11 @@ const BlogsDetailPage = () => {
               />
             </div>} />
             {(urlFile) &&
-              <img src={urlFile || ""} alt="image" className="w-[350px] h-[200px] object-contain " />
+              <Image
+                src={urlFile || ""}
+                alt="image"
+                className="w-[350px] h-[200px] object-contain"
+              />
             }
             <Item
               title="Cập nhập hình nền"
