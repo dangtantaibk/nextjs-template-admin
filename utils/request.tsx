@@ -25,7 +25,8 @@ const addAuthorizationHeader = (config) => {
 
 const handleErrorResponse = (error) => {
   if (error.response.status === 403) {
-    toast(error.response.data.message, { hideProgressBar: true, autoClose: 2000, type: 'error', position: 'top-right' })
+    const data = error.response.data;
+    toast(`${data.status}: ${data.message}`, { hideProgressBar: true, autoClose: 2000, type: 'error', position: 'top-right' })
     setTimeout(() => {
       window.location.href = encodeURI(location.href);
     }, 1000);
