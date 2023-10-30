@@ -4,6 +4,8 @@ import SignUp from "app/signup/page";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import Loader from "@/components/common/Loader";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { usePathname } from 'next/navigation';
 
@@ -72,6 +74,7 @@ const Layout = (props: LayoutProps) => {
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
           {loading ? <Loader /> :
             <div className="flex h-screen overflow-hidden">
+              <ToastContainer/>
               {getComponent()}
             </div>
           }

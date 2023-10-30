@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { AUTH_DOMAIN, ECODE } from 'constant';
+import { AUTH_DOMAIN } from 'constant';
+import { toast } from "react-toastify";
 
 const request = axios.create({
   baseURL: AUTH_DOMAIN,
@@ -23,17 +24,15 @@ const addAuthorizationHeader = (config) => {
 };
 
 const handleErrorResponse = (error) => {
-  if (error.response?.data?.code === ECODE.SESSION_INVALID) {
-    window.location.href = `${AUTH_DOMAIN}/login/?refType=DMS_ADMIN&redirect_url=${encodeURI(location.href)}`;
-  } else if (error.response?.data?.code === ECODE.PERMISSION_DENIED) {
-    if (window.location.href !== '/403') {
-      window.location.href = `/403?redirect_url=${encodeURI(location.href)}`;
-    }
+  if (error.response.status === 403) {
+    toast(error.response.data.message, { hideProgressBar: true, autoClose: 2000, type: 'error', position: 'top-right' })
+    setTimeout(() => {
+      window.location.href = encodeURI(location.href);
+    }, 1000);
   }
-  return Promise.reject(error);
+  return Promise.reject(error.response);
 };
 
 request.interceptors.request.use(addAuthorizationHeader);
 request.interceptors.response.use((response) => response, handleErrorResponse);
-
 export default request;
