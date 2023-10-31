@@ -1,4 +1,4 @@
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import ChartFour from "@/components/Charts/ChartFour";
 import ChartOne from "@/components/Charts/ChartOne";
 import ChartThree from "@/components/Charts/ChartThree";

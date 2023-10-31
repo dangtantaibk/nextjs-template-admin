@@ -5,7 +5,6 @@ import Loading from "@/components/Loading";
 import Link from "next/link";
 import Image from "next/image";
 import request from '@/utils/request';
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -39,21 +38,23 @@ const SignIn: React.FC = () => {
   const [loadding, setLoadding] = useState(false);
   const [notification, setNotification] = useState(notiDetail);
   const [locked, setLocked] = useState(false);
-  const [token, setToken] = useLocalStorage("auth", "");
 
   const onSubmit = handleSubmit(async (data) => {
     setLoadding(true);
     const resp: any = await request.post(`/api/v1/users/login`, data);
+    console.log("resp=======>", resp)
     try {
-      router.refresh();
       if (resp?.data?.jwt) {
-        setToken(resp?.data?.jwt)
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem('auth', resp?.data?.jwt);
+        }
         setNotification({ isOpen: true, message: "Đăng nhập thành công", type: "success" })
       } else {
         setNotification({ isOpen: true, message: "Đăng nhập thất bại", type: "error" })
       }
+      router.refresh();
     } catch (error) {
-      console.log(error)
+      console.log("error", error)
     } finally {
       setLoadding(false);
     }

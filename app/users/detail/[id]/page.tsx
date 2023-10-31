@@ -1,32 +1,17 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Buttons from "@/components/Buttons";
-import Loading from 'components/Loading';
 import Link from "next/link";
-import Notification from "@/components/Notification";
 
+import { Breadcrumb, Buttons, Loading, Notification, LabelTailwind, UploadFile } from "@/components";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
-import { AUTH_DOMAIN } from 'constant';
-import useLocalStorage from "@/hooks/useLocalStorage";
+import { UserDetail } from "models/users";
 
-const Item = ({ title, value }) => {
-  return (
-    <div className="flex items-center">
-      <div className="font-semibold mr-2 min-w-[120px]">{title}: </div>
-      <div>{value}</div>
-    </div>
-  )
-}
-interface UserDetail {
-  avatar: string | null;
-  id: number;
-  name: string | null;
-  password: string;
-  title: string | null;
-  username: string;
+const notiDetail = {
+  isOpen: false,
+  message: "",
+  type: ""
 }
 
 const UserDetailPage = ({ params }: { params: { id: string } }) => {
@@ -42,13 +27,6 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
   const [userDetail, setUserDetail] = useState<UserDetail>();
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
-  const [token, setToken] = useLocalStorage("auth", "");
-
-  const notiDetail = {
-    isOpen: false,
-    message: "",
-    type: ""
-  }
   const [notification, setNotification] = useState(notiDetail);
 
   const getUserDetail = async (id) => {
@@ -95,40 +73,7 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
     } finally {
       setloading(false);
     }
-  })
-
-  const uploadAvatarUser = async (file) => {
-    const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
-    const formData = new FormData();
-    if (!TYPE_IMAGE.includes(file.type)) {
-      setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
-    } else {
-      formData.append('file', file);
-      await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          try {
-            if (data.data) {
-              setUrlFile(data.data.url)
-              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
-            } else {
-              setNotification({ isOpen: true, message: data.message, type: "error" })
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        })
-        .catch(error => {
-          console.error('Upload failed:', error);
-        });
-    }
-  }
+  });
 
   return (
     <form onSubmit={onSubmit}>
@@ -138,47 +83,26 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
         }} />
       }
       <Breadcrumb parent="Thông tin nhân viên" pageName="Thông tin chi tiết" />
-      <div className="relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg ">
-        {loading &&
-          <div className="min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full"><Loading /></div>
-        }
+      <div className={styles.root}>
+        {loading && <div className={styles.loading}><Loading /></div>}
         <div className="p-5">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 rounded-sm mb-5">
-            <div className="grid grid-cols-1 gap-4">
-              <img src={urlFile || userDetail?.avatar || '/admin/images/user/user-06.png'} alt="file" className="w-[200px] h-[200px] object-scale-down rounded-full border" />
-              <Item
+          <div className={styles.wrapper}>
+            <div className={styles.col}>
+              <UploadFile
+                setNotification={setNotification}
+                setUrlFile={setUrlFile}
+                urlFile={urlFile || userDetail?.avatar || '/admin/images/user/user-06.png'}
+                className={styles.uploadfile}
                 title="Cập nhập hình ảnh"
-                value={<div className="xsm:bottom-4 xsm:right-4">
-                  <label
-                    htmlFor="cover"
-                    className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
-                  >
-                    <input
-                      type="file"
-                      name="cover"
-                      id="cover"
-                      className="sr-only"
-                      accept="image/png, image/gif, image/jpeg"
-                      onChange={(e: any) => {
-                        e.preventDefault();
-                        const file = e?.target?.files[0];
-                        uploadAvatarUser(file)
-                      }} />
-                    <span>
-                      <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
-                    </span>
-                    <span>Upload avatar</span>
-                  </label>
-                </div>}
+                titleBtn="Upload image product"
               />
             </div>
-            <div className="grid grid-cols-1 gap-4">
-              <Item
+            <div className={styles.col}>
+              <LabelTailwind
                 title="Mã nhân viên"
                 value={<div>{userDetail?.id || "-"}</div>}
               />
-
-              <Item
+              <LabelTailwind
                 title="Tên đăng nhập"
                 value={<div className="relative">
                   <input
@@ -188,11 +112,11 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
                       required: 'Vui lòng nhập tên đăng nhập',
                     })}
                     placeholder="Tên đăng nhập"
-                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary bg-bodydark"
+                    className={styles.input}
                   />
                 </div>}
               />
-              <Item
+              <LabelTailwind
                 title="Tên nhân viên"
                 value={<div className="relative">
                   <input
@@ -201,18 +125,18 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
                       required: 'Vui lòng nhập tên nhân viên',
                     })}
                     placeholder="Tên nhân viên"
-                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className={styles.input}
                   />
                 </div>}
               />
-              <Item
+              <LabelTailwind
                 title="Chức vụ"
                 value={<div className="relative">
                   <input
                     type="text"
                     {...register('title')}
                     placeholder="Chức vụ"
-                    className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    className={styles.input}
                   />
                 </div>}
               />
@@ -220,13 +144,11 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 z-20 w-full p-1 bg-white shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600">
-        <Link href="/users" className="inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10">
-          Huỷ
-        </Link>
+      <footer className={styles.footer}>
+        <Link href="/users" className={styles.btnLink}>Huỷ</Link>
         <Buttons
           type="primary"
-          className="!bg-success hover:!bg-stroke"
+          className={styles.btnSubmit}
           isSubmit={true}
         >
           Cập nhật
@@ -235,5 +157,17 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
     </form>
   );
 };
+
+const styles = {
+  root: 'relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg',
+  loading: 'min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full',
+  wrapper: 'grid grid-cols-1 lg:grid-cols-2 gap-4 rounded-sm mb-5',
+  col: 'grid grid-cols-1 gap-4',
+  uploadfile: 'w-[200px] h-[200px] object-scale-down rounded-full border',
+  input: 'w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary',
+  footer: 'fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-t border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600',
+  btnLink: 'inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10',
+  btnSubmit: '!bg-success hover:!bg-stroke',
+}
 
 export default UserDetailPage;

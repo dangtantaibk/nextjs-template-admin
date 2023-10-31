@@ -1,48 +1,20 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import Buttons from "@/components/Buttons";
 import moment from "moment";
-import Loading from 'components/Loading';
 import Link from "next/link";
-import Notification from "@/components/Notification";
 
-import { AUTH_DOMAIN } from 'constant';
+import { Breadcrumb, Buttons, Loading, Notification, UploadFile, LabelTailwind } from "@/components";
+import { ProductProps } from "models/products";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
-import useLocalStorage from "@/hooks/useLocalStorage";
-
-const Item = ({ title, value }) => {
-  return (
-    <div className="flex items-center text-lg min-h-[50px]">
-      <div className="font-semibold mr-2 min-w-[170px]">{title}: </div>
-      <div>{value}</div>
-    </div>
-  )
-}
-
-interface ProductsDetailProp {
-  createdAt: number;
-  description: string;
-  id: number;
-  image: string;
-  name: string;
-  price: number;
-  rating: number;
-  status: number;
-  stock: number;
-  updatedAt: number;
-  viewCount: number;
-}
 
 const ProductDetailPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const id = params.id;
-  const [productDetail, setProductDetail] = useState<ProductsDetailProp>()
+  const [productDetail, setProductDetail] = useState<ProductProps>()
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
-  const [token, setToken] = useLocalStorage("auth", "");
   const {
     register,
     handleSubmit,
@@ -92,7 +64,7 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
       description: data.description,
       image: urlFile,
     }
-    const resp = await request.put(`api/v1/products/${id}`, params);
+    await request.put(`api/v1/products/${id}`, params);
     try {
       router.push("/products")
     } catch (error) {
@@ -100,40 +72,7 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
     } finally {
       setloading(false);
     }
-  })
-
-  const uploadAvatarUser = async (file) => {
-    const TYPE_IMAGE = ['image/png', 'image/jpeg', 'image/gif'];
-    const formData = new FormData();
-    if (!TYPE_IMAGE.includes(file.type)) {
-      setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
-    } else {
-      formData.append('file', file);
-      await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          try {
-            if (data.data) {
-              setUrlFile(data.data.url)
-              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
-            } else {
-              setNotification({ isOpen: true, message: data.message, type: "error" })
-            }
-          } catch (error) {
-            console.log(error)
-          }
-        })
-        .catch(error => {
-          console.error('Upload failed:', error);
-        });
-    }
-  }
+  });
 
   return (
     <form onSubmit={onSubmit}>
@@ -143,94 +82,94 @@ const ProductDetailPage = ({ params }: { params: { id: string } }) => {
         }} />
       }
       <Breadcrumb parent="Sản phẩm" pageName="Thông tin chi tiết sản phẩm" />
-      <div className="relative bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg ">
+      <div className={styles.root}>
         {loading &&
-          <div className="min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full"><Loading /></div>
+          <div className={styles.loading}><Loading /></div>
         }
-        <div className="p-5 flex flex-col sm:flex-row">
-          <div className="md:max-w-[280px] sm:max-w-full">
-            <div className="bg-gray-800 mb-3 text-lg font-semibold">Hình ảnh sản phẩm:</div>
-            <img src={urlFile || productDetail?.image} alt="image" className="w-[260px] h-[360px] object-contain " />
-            <Item
+        <div className={styles.root_bg}>
+          <div className={styles.bgImage}>
+            <div className={styles.title}>Hình ảnh sản phẩm:</div>
+            <img src={urlFile || productDetail?.image || ""} alt="image" className="w-[260px] h-[360px] object-contain " />
+            <UploadFile
+              setNotification={setNotification}
+              setUrlFile={setUrlFile}
+              urlFile={""}
+              className={styles.uploadfile}
               title="Cập nhập hình ảnh"
-              value={<div className="xsm:bottom-4 xsm:right-4">
-                <label
-                  htmlFor="cover"
-                  className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
-                >
-                  <input
-                    type="file"
-                    name="cover"
-                    id="cover"
-                    className="sr-only"
-                    accept="image/png, image/gif, image/jpeg"
-                    onChange={(e: any) => {
-                      e.preventDefault();
-                      const file = e?.target?.files[0];
-                      uploadAvatarUser(file)
-                    }} />
-                  <span>
-                    <img src="/admin/images/user/ic-camera.svg" alt="ic_camera" className="fill-current" />
-                  </span>
-                  <span>Upload</span>
-                </label>
-              </div>}
             />
           </div>
-          <div className="rounded-sm mb-5 md:p-10 grid sm:p-1 mt-4 sm:mt-0">
-            <Item title="Mã sản phẩm" value={productDetail ? productDetail.id : '-'} />
-            <Item title="Tên sản phẩm" value={productDetail ? productDetail.name : '-'} />
-            <Item title="Thời gian tạo" value={productDetail ? moment(productDetail.createdAt).format('DD/MM/YYYY') : '-'} />
-            <Item title="Đánh giá sản phẩm" value={productDetail ? productDetail.rating : '-'} />
-            <Item title="Lượt xem" value={productDetail ? productDetail.viewCount : '-'} />
-            <Item
+          <div className={styles.wrapper}>
+            <LabelTailwind title="Mã sản phẩm" value={productDetail ? productDetail.id : '-'} width={170} />
+            <LabelTailwind title="Tên sản phẩm" value={productDetail ? productDetail.name : '-'} width={170} />
+            <LabelTailwind title="Thời gian tạo" value={productDetail ? moment(productDetail.createdAt).format('DD/MM/YYYY') : '-'} width={170} />
+            <LabelTailwind title="Đánh giá sản phẩm" value={productDetail ? productDetail.rating : '-'} width={170} />
+            <LabelTailwind title="Lượt xem" value={productDetail ? productDetail.viewCount : '-'} width={170} />
+            <LabelTailwind
               title="Giá sản phẩm"
-              value={<div className="relative">
+              value={<div className={styles.label}>
                 <input
                   type="number"
                   {...register('price')}
                   placeholder="Giá sản phẩm"
-                  className="w-full min-w-[300px] rounded-lg border border-stroke bg-transparent py-2 pl-2 pr-2 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className={styles.input}
                 />
               </div>}
+              width={170}
             />
-            <Item
+            <LabelTailwind
               title="Số lượng tồn kho"
-              value={<div className="relative">
+              value={<div className={styles.label}>
                 <input
                   type="number"
                   {...register('stock')}
                   placeholder="Tồn kho"
-                  className="w-full min-w-[300px] rounded-lg border border-stroke bg-transparent py-2 pl-2 pr-2 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className={styles.input}
                 />
               </div>}
+              width={170}
             />
-            <Item
+            <LabelTailwind
               title="Mô tả sản phẩm"
-              value={<div className="relative">
+              value={<div className={styles.label}>
                 <textarea
                   rows={4}
                   {...register('description')}
                   placeholder="Mô tả"
-                  className="w-full min-w-[300px] rounded-lg border border-stroke bg-transparent py-2 pl-2 pr-2 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className={styles.input}
                 />
               </div>}
+              width={170}
             />
           </div>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 z-20 w-full p-1 bg-white shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600">
-        <Link href="/products" className="inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10">
+      <footer className={styles.footer}>
+        <Link href="/products" className={styles.btnLink}>
           Huỷ
         </Link>
         <Buttons
           type="primary"
-          className="!bg-success hover:!bg-stroke">
+          className={styles.btnSubmit}>
           Cập nhật
         </Buttons>
       </footer>
     </form>
   );
 };
+
+const styles = {
+  root: 'relative bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg',
+  loading: 'min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full',
+  root_bg: 'p-5 flex flex-col sm:flex-row',
+  bgImage: 'md:max-w-[280px] sm:max-w-full',
+  title: 'bg-gray-800 mb-3 text-lg font-semibold',
+  uploadfile: 'w-[350px] h-[200px] object-contain',
+  wrapper: 'rounded-sm mb-5 md:p-10 grid sm:p-1 mt-4 sm:mt-0',
+  label: 'relative mt-3',
+  input: 'w-full min-w-[300px] rounded-lg border border-stroke bg-transparent py-2 pl-2 pr-2 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary',
+  footer: 'fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-t border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600',
+  btnLink: 'inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10',
+  btnSubmit: '!bg-success hover:!bg-stroke'
+}
 
 export default ProductDetailPage;

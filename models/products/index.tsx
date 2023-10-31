@@ -1,14 +1,14 @@
 export interface ProductProps {
-  createdAt: string;
+  createdAt: number;
   description: string;
   id: Number;
-  image: String;
-  name: String;
+  image: string;
+  name: string;
   price: Number;
   rating: Number;
   status: Number;
   stock: Number;
-  updatedAt: String;
+  updatedAt: string;
   viewCount: Number;
 }
 

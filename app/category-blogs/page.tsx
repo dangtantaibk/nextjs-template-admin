@@ -1,11 +1,9 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import TableTailwind from "@/components/TableTailwind";
-import Buttons from "@/components/Buttons";
 import Image from "next/image";
 import request from '@/utils/request';
 
+import { Breadcrumb, TableTailwind, Buttons } from "@/components";
 import { useRouter } from 'next/navigation';
 
 const CategoryBlogsPage = () => {
@@ -44,7 +42,7 @@ const CategoryBlogsPage = () => {
   const onDelete = async (id) => {
     const resp = await request.delete(`/api/v1/categoryBlogs/${id}`);
     try {
-      if(resp.status === 204){
+      if (resp.status === 204) {
         getCategoryBlogs();
       }
     } catch (error) {
