@@ -1,14 +1,14 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import TableTailwind from "@/components/TableTailwind";
 import Buttons from "@/components/Buttons";
 import Image from "next/image";
 import request from '@/utils/request';
 import moment from "moment";
 import Link from "next/link";
-import { AUTH_DOMAIN } from 'constant';
 
+import { AUTH_DOMAIN } from 'constant';
 import { useRouter } from 'next/navigation';
 
 const BlogsPage = () => {
@@ -46,7 +46,7 @@ const BlogsPage = () => {
   }, [pagination]);
 
   const onDelete = async id => {
-    const resp = await request.delete(`/api/v1/blogs/${id}`);
+    await request.delete(`/api/v1/blogs/${id}`);
     try {
       getListBlogs();
     } catch (error) {

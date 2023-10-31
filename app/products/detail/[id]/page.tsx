@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import Buttons from "@/components/Buttons";
 import moment from "moment";
 import Loading from 'components/Loading';

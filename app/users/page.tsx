@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import TableTailwind from "@/components/TableTailwind";
 import Buttons from "@/components/Buttons";
 import Image from "next/image";

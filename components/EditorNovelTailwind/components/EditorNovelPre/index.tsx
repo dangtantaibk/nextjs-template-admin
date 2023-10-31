@@ -7,13 +7,14 @@ interface EditorNovelProps {
   handleUpdateEditor: Function;
 }
 
-const EditorNovelDefault = (props: EditorNovelProps) => {
+const EditorNovelPre = (props: EditorNovelProps) => {
   const { contentAdmin, handleUpdateEditor } = props;
 
   if (Object?.keys(contentAdmin).length === 0) {
     return;
   }
 
+  console.log("contentAdmin", contentAdmin)
   return (
     <Editor
       defaultValue={contentAdmin}
@@ -29,4 +30,4 @@ const EditorNovelDefault = (props: EditorNovelProps) => {
   );
 };
 
-export default memo(EditorNovelDefault);
+export default memo(EditorNovelPre);

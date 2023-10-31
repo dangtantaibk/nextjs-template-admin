@@ -1,5 +1,5 @@
 import React from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import Image from "next/image";
 import { FollowMeOn, InfoProfile } from "@/components/Profile"
 import { Metadata } from "next";

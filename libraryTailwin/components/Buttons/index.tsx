@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import React from "react";
 
 interface ButtonsProps {

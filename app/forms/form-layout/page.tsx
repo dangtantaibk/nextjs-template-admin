@@ -1,4 +1,4 @@
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Breadcrumb from "@/components/Breadcrumbs";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Form Layout Page | Next.js E-commerce Dashboard Template",
