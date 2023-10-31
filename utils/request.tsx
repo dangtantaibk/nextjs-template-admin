@@ -27,6 +27,9 @@ const handleErrorResponse = (error) => {
   if (error.response.status === 403) {
     const data = error.response.data;
     toast(`${data.status}: ${data.message}`, { hideProgressBar: true, autoClose: 2000, type: 'error', position: 'top-right' })
+    if (typeof window !== "undefined") {
+       window.localStorage.removeItem("auth");
+    }
     setTimeout(() => {
       window.location.href = encodeURI(location.href);
     }, 1000);

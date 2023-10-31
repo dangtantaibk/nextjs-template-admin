@@ -42,7 +42,6 @@ const SignIn: React.FC = () => {
   const onSubmit = handleSubmit(async (data) => {
     setLoadding(true);
     const resp: any = await request.post(`/api/v1/users/login`, data);
-    console.log("resp=======>", resp)
     try {
       if (resp?.data?.jwt) {
         if (typeof window !== "undefined") {
