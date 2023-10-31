@@ -1,30 +1,12 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs";
-import Buttons from "@/components/Buttons";
-import LabelTailwind from "@/components/LabelTailwind";
-import UploadFile from "@/components/UploadFile";
-import EditorNovelTailwind from "@/components/EditorNovelTailwind";
 import moment from "moment";
-import Loading from 'components/Loading';
-import Notification from "@/components/Notification";
 import Link from "next/link";
 
+import { Breadcrumb, Buttons, EditorNovelTailwind, LabelTailwind, Loading, Notification, UploadFile } from "@/components";
+import { BlogsDetailProp } from "models/blogs";
 import { useRouter } from 'next/navigation';
-interface BlogsDetailProp {
-  author: number;
-  content: string | null;
-  createdAt: number;
-  id: number;
-  publishedDate: number;
-  shortDesc: string;
-  status: number;
-  title: string;
-  updatedAt: number;
-  url?: string;
-  backgroundUrl?: string | null;
-}
 
 const notiDetail = {
   isOpen: false,

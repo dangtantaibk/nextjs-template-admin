@@ -1,13 +1,11 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs";
-import TableTailwind from "@/components/TableTailwind";
-import Buttons from "@/components/Buttons";
 import Image from "next/image";
 import request from '@/utils/request';
 import moment from "moment";
 import Link from "next/link";
 
+import { Breadcrumb, TableTailwind, Buttons } from "@/components";
 import { AUTH_DOMAIN } from 'constant';
 import { useRouter } from 'next/navigation';
 
@@ -80,7 +78,7 @@ const BlogsPage = () => {
       width: 200,
       render: (dom, entity) => {
         if (dom) {
-          return <img src={entity?.backgroundUrl || ""} alt="backgroundUrl" className="w-[180px] h-[150px] object-contain "/>
+          return <img src={entity?.backgroundUrl || ""} alt="backgroundUrl" className="w-[180px] h-[150px] object-contain " />
         } else {
           return 'Không có hình nền'
         }

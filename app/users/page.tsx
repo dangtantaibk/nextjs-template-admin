@@ -1,11 +1,9 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Breadcrumb from "@/components/Breadcrumbs";
-import TableTailwind from "@/components/TableTailwind";
-import Buttons from "@/components/Buttons";
 import Image from "next/image";
 import request from '@/utils/request';
 
+import { Breadcrumb, TableTailwind, Buttons } from "@/components";
 import { useRouter } from 'next/navigation';
 
 const UsersPage = () => {
@@ -92,7 +90,7 @@ const UsersPage = () => {
             type="link"
             tooltip="Xem thông tin nhân viên"
             onClick={() => {
-              router.push(`/users/detail?id=${entity.id}`);
+              router.push(`/users/detail/${entity.id}`);
             }}>
             <Image src={"/admin/images/product/eye.svg"} alt="eye" width={19} height={19} className="fill-current" />
           </Buttons>

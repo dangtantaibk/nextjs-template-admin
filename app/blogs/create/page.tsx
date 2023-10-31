@@ -1,16 +1,10 @@
 "use client"
 import React, { useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs";
-import Buttons from "@/components/Buttons";
-import EditorNovelTailwind from "@/components/EditorNovelTailwind";
-import UploadFile from "@/components/UploadFile";
-import LabelTailwind from "@/components/LabelTailwind";
-import Notification from "@/components/Notification";
 import moment from "moment";
-import Loading from 'components/Loading';
 import Link from "next/link";
 
+import { Breadcrumb, Buttons, EditorNovelTailwind, UploadFile, LabelTailwind, Notification, Loading } from "@/components";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
 

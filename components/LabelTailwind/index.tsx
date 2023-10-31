@@ -3,7 +3,7 @@ import React from "react";
 
 interface LabelTailwindProps {
   title: string;
-  value: React.ReactNode;
+  value: any;
   width?: number;
 }
 

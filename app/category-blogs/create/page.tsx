@@ -1,23 +1,11 @@
 "use client"
 import React, { useState } from "react";
 import request from '@/utils/request';
-import Breadcrumb from "@/components/Breadcrumbs";
-import Buttons from "@/components/Buttons";
-import Loading from 'components/Loading';
-import Notification from "@/components/Notification";
 import Link from "next/link";
 
+import { Breadcrumb, Buttons, Loading, Notification, LabelTailwind } from "@/components";
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
-
-const Item = ({ title, value }) => {
-  return (
-    <div className="flex items-center">
-      <div className="font-semibold mr-2 min-w-[120px]">{title}: </div>
-      <div>{value}</div>
-    </div>
-  )
-}
 
 const CreateCategoryBlogsPage = () => {
   const {
@@ -61,13 +49,11 @@ const CreateCategoryBlogsPage = () => {
         }} />
       }
       <Breadcrumb pageName="Thêm danh mục" />
-      <div className="relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg ">
-        {loading &&
-          <div className="min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full"><Loading /></div>
-        }
+      <div className={styles.root}>
+        {loading && <div className={styles.loading}><Loading /></div>}
         <div className="p-5">
-          <div className="grid grid-cols-1 gap-4 rounded-sm mb-5 ">
-            <Item
+          <div className={styles.col}>
+            <LabelTailwind
               title="Tên danh mục"
               value={<div className="relative">
                 <input
@@ -76,26 +62,34 @@ const CreateCategoryBlogsPage = () => {
                     required: 'Vui lòng nhập tên danh mục',
                   })}
                   placeholder="Tên danh mục"
-                  className="w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  className={styles.input}
                 />
               </div>}
             />
           </div>
         </div>
       </div>
-      <footer className="fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600">
-        <Link href="/category-blogs" className="inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10">
-          Huỷ
-        </Link>
+      <footer className={styles.footer}>
+        <Link href="/category-blogs" className={styles.btnLink}>Huỷ</Link>
         <Buttons
           type="primary"
           isSubmit={true}
-          className="!bg-success hover:!bg-stroke">
+          className={styles.btnSubmit}>
           Tạo danh mục
         </Buttons>
       </footer>
     </form>
   );
 };
+
+const styles = {
+  root: 'relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg',
+  loading: 'min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full',
+  col: 'grid grid-cols-1 gap-4 rounded-sm mb-5',
+  input: 'w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary',
+  footer: 'fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-t border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600',
+  btnLink: 'inline-flex rounded mr-2 items-center justify-center bg-meta-8 hover:!bg-stroke py-2 px-10 text-center font-medium text-white lg:px-8 xl:px-10',
+  btnSubmit: '!bg-success hover:!bg-stroke',
+}
 
 export default CreateCategoryBlogsPage;
