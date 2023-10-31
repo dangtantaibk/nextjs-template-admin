@@ -8,6 +8,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 import { UserDetail } from "models/users";
 
+const notiDetail = {
+  isOpen: false,
+  message: "",
+  type: ""
+}
+
 const UserDetailPage = ({ params }: { params: { id: string } }) => {
   const {
     register,
@@ -21,12 +27,6 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
   const [userDetail, setUserDetail] = useState<UserDetail>();
   const [loading, setloading] = useState(false);
   const [urlFile, setUrlFile] = useState("");
-
-  const notiDetail = {
-    isOpen: false,
-    message: "",
-    type: ""
-  }
   const [notification, setNotification] = useState(notiDetail);
 
   const getUserDetail = async (id) => {

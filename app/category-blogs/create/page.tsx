@@ -7,6 +7,12 @@ import { Breadcrumb, Buttons, Loading, Notification, LabelTailwind } from "@/com
 import { useRouter } from 'next/navigation';
 import { useForm } from "react-hook-form";
 
+const notiDetail = {
+  isOpen: false,
+  message: "",
+  type: ""
+}
+
 const CreateCategoryBlogsPage = () => {
   const {
     register,
@@ -15,18 +21,11 @@ const CreateCategoryBlogsPage = () => {
   } = useForm<any>();
   const router = useRouter();
   const [loading, setloading] = useState(false);
-
-  const notiDetail = {
-    isOpen: false,
-    message: "",
-    type: ""
-  }
   const [notification, setNotification] = useState(notiDetail);
 
   const onSubmit = handleSubmit(async (data) => {
     setloading(true);
     const resp = await request.post(`/api/v1/categoryBlogs`, data);
-
     try {
       if (resp.status === 201) {
         router.push("/category-blogs")
