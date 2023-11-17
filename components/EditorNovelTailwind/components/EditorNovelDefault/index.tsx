@@ -14,7 +14,6 @@ const EditorNovelDefault = (props: EditorNovelProps) => {
     return;
   }
 
-  console.log("contentAdmin", contentAdmin)
   return (
     <Editor
       defaultValue={contentAdmin}
@@ -23,7 +22,6 @@ const EditorNovelDefault = (props: EditorNovelProps) => {
       onDebouncedUpdate={(editor) => {
         const view = editor?.getJSON();
         const content = editor?.getHTML();
-        console.log("onDebouncedUpdate", content)
         handleUpdateEditor(content, view);
       }}
     />

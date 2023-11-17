@@ -74,7 +74,7 @@ const Layout = (props: LayoutProps) => {
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
           {loading ? <Loader /> :
             <div className="flex h-screen overflow-hidden">
-              <ToastContainer/>
+              <ToastContainer />
               {getComponent()}
             </div>
           }

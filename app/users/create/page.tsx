@@ -144,7 +144,7 @@ const CreateUserPage = () => {
 const styles = {
   root: 'relative border-stone-200 bg-white sm:mb-[calc(20vh)] sm:rounded-lg sm:shadow-lg',
   loading: 'min-h-[260px] h-full flex items-center justify-center absolute z-9999 bg-boxdark-10 w-full',
-  col: 'grid grid-cols-1 gap-4 rounded-sm mb-5 ',
+  col: 'grid grid-cols-1 gap-5 rounded-sm mb-4',
   uploadfile: 'w-[300px] h-[200px]',
   input: 'w-full rounded-lg border border-stroke bg-transparent p-2 outline-none min-w-[350px] dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary',
   footer: 'fixed bottom-0 left-0 z-20 w-full p-1 bg-white border-t border-gray-200 shadow flex md:items-center justify-end md:p-2 dark:bg-gray-800 dark:border-gray-600',

@@ -32,69 +32,73 @@ const EditorNovelTailwind = (props: EditorNovelTailwindProps) => {
     if (!TYPE_IMAGE.includes(file.type)) {
       setNotification({ isOpen: true, message: "Vui lòng chọn file ảnh *png, *jpeg, *gif", type: "error" })
     } else {
-      formData.append('file', file);
-      await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${token()}`
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          try {
-            if (data.data) {
-              if (Object?.keys(contentAdmin).length === 0) {
-                const dataContent = {
-                  type: "doc",
-                  content: [
-                    {
-                      type: "image",
-                      attrs: {
-                        src: data.data.url,
-                        alt: data.data.url,
-                        title: data.data.url,
-                        width: null,
-                        height: null,
-                      },
-                    },
-                  ]
-                }
-                setContentAdmin(dataContent);
-              } else {
-                const content = [...contentAdmin.content, {
-                  type: "image",
-                  attrs: {
-                    src: data.data.url,
-                    alt: data.data.url,
-                    title: data.data.url,
-                    width: null,
-                    height: null,
-                  },
-                },];
-                const dataContent = {
-                  type: "doc",
-                  content: content
-                }
-                setContentPreAdmin(dataContent);
-              }
-              setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
-            } else {
-              setNotification({ isOpen: true, message: data.message, type: "error" })
-            }
-          } catch (error) {
-            console.log(error)
+      try {
+        formData.append('file', file);
+        await fetch(`${AUTH_DOMAIN}api/v1/upload`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${token()}`
           }
         })
-        .catch(error => {
-          console.error('Upload failed:', error);
-        });
+          .then(response => response.json())
+          .then(data => {
+            try {
+              if (data.data) {
+                if (Object?.keys(contentAdmin).length === 0) {
+                  const dataContent = {
+                    type: "doc",
+                    content: [
+                      {
+                        type: "image",
+                        attrs: {
+                          src: data.data.url,
+                          alt: data.data.url,
+                          title: data.data.url,
+                          width: null,
+                          height: null,
+                        },
+                      },
+                    ]
+                  }
+                  setContentAdmin(dataContent);
+                } else {
+                  const content = [...contentAdmin.content, {
+                    type: "image",
+                    attrs: {
+                      src: data.data.url,
+                      alt: data.data.url,
+                      title: data.data.url,
+                      width: null,
+                      height: null,
+                    },
+                  },];
+                  const dataContent = {
+                    type: "doc",
+                    content: content
+                  }
+                  setContentPreAdmin(dataContent);
+                }
+                setNotification({ isOpen: true, message: "Upload file thành công", type: "success" })
+              } else {
+                setNotification({ isOpen: true, message: data.message, type: "error" })
+              }
+            } catch (error) {
+              setNotification({ isOpen: true, message: error, type: "error" })
+            }
+          })
+          .catch(error => {
+            setNotification({ isOpen: true, message: error, type: "error" })
+          });
+      } catch (error) {
+        setNotification({ isOpen: true, message: error, type: "error" })
+      }
     }
   };
 
   return (
     <React.Fragment>
-      <div className="font-semibold mr-2 mb-5 border-b border-stroke">Nội dung: </div>
+      <div className="font-semibold mr-2 mb-5 mt-5 border-b border-stroke">Nội dung: </div>
       <div className="w-full">
         {Object?.keys(contentAdmin).length ?
           Object?.keys(contentPreAdmin).length !== 0 ?
